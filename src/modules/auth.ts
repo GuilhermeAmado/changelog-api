@@ -1,11 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import { User } from '@prisma/client';
 
-type User = {
-  id: string;
-  username: string;
-};
+type UserToCreateJWT = Pick<User, 'id' | 'username'>;
 
 type ProtectedRouteRequest = Request & {
   user?: string | jwt.JwtPayload;
@@ -19,7 +17,7 @@ export const hashPassword = (password: string | Buffer) => {
   return bcrypt.hash(password, 10);
 };
 
-export const createJWT = (user: User) => {
+export const createJWT = (user: UserToCreateJWT) => {
   if (!process.env.JWT_SECRET) {
     throw new Error('Missing env variable');
   }

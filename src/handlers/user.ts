@@ -1,14 +1,10 @@
-import { Request, Response } from 'express';
+import { User } from '@prisma/client';
+import { Response } from 'express';
 import prisma from '../db';
-
 import { comparePasswords, createJWT, hashPassword } from '../modules/auth';
+import { TypedRequestBody } from '../types';
 
-type UserRequest = Omit<Request, 'body'> & {
-  body: {
-    username: string;
-    password: string;
-  };
-};
+type UserRequest = TypedRequestBody<Pick<User, 'username' | 'password'>>;
 
 export const createNewUser = async (req: UserRequest, res: Response) => {
   const { username, password } = req.body;
