@@ -3,17 +3,19 @@ import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 
+type Password = string | Buffer;
+
 type UserToCreateJWT = Pick<User, 'id' | 'username'>;
 
 type ProtectedRouteRequest = Request & {
   user?: string | jwt.JwtPayload;
 };
 
-export const comparePasswords = (password: string | Buffer, hash: string) => {
+export const comparePasswords = (password: Password, hash: string) => {
   return bcrypt.compare(password, hash);
 };
 
-export const hashPassword = (password: string | Buffer) => {
+export const hashPassword = (password: Password) => {
   return bcrypt.hash(password, 10);
 };
 
